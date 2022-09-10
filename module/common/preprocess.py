@@ -1,20 +1,12 @@
-#%%
 import os
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 from tqdm import tqdm
+from datetime import datetime, timedelta
+from typing import Tuple
 
-#%%
-train_input_dir = "/Users/wonhyung64/data/bok_choy/train_input"
-test_input_dir = "/Users/wonhyung64/data/bok_choy/test_input"
-train_target_dir = "/Users/wonhyung64/data/bok_choy/train_target"
-test_target_dir = "/Users/wonhyung64/data/bok_choy/test_target"
 
-#%%
-data_dir = "/Users/wonhyung64/data/bok_choy"
-
-def preprocess(data_dir: str) ->  Tuple[np.ndarray, np.ndarray, dict]:
+def preprocess_train(data_dir: str) ->  Tuple[np.ndarray, np.ndarray, dict]:
     """
     Preprocess train data
 
@@ -24,8 +16,10 @@ def preprocess(data_dir: str) ->  Tuple[np.ndarray, np.ndarray, dict]:
     Returns:
         Tuple[np.ndarray, np.ndarray, dict]: X, Y, sample num
     """
-    input_lst = os.listdir(f"{data_dir}/train_input_dir")
-    target_lst = os.listdir(f"{data_dir}/train_target_dir")
+    train_input_dir = f"{data_dir}/train_input"
+    train_target_dir = f"{data_dir}/train_target"
+    input_lst = os.listdir(train_input_dir)
+    target_lst = os.listdir(train_target_dir)
     input_lst.sort()
     target_lst.sort()
 
@@ -59,40 +53,3 @@ def preprocess(data_dir: str) ->  Tuple[np.ndarray, np.ndarray, dict]:
     }
 
     return X, Y, response
-# %%
-
-# %%
-input_lst = os.listdir(train_input_dir)
-target_lst = os.listdir(train_target_dir)
-input_lst.sort()
-target_lst.sort()
-
-cols = []
-progress = tqdm(range(len(input_lst)))
-for i in progress:
-    
-    input = pd.read_csv(f"{train_input_dir}/{input_lst[i]}")
-    df_cols = input.columns.tolist()
-    if i > 0:
-        if tmp_cols != df_cols: break
-    # len(df_cols)
-    if len(df_cols) != 38: break
-    # if "펌프작동남은시간.1" in input.columns.tolist(): break
-    cols += df_cols
-    tmp_cols = df_cols.copy()
-
-input_1 = pd.read_csv(f"{train_input_dir}/{input_lst[i-1]}")
-input.iloc[:, 8:12]
-input_1.iloc[:, 8:12]
-print(tmp_cols)
-print(df_cols)
-
-tmp = set(cols)
-len(tmp)
-
-'''
-일간누적분무량
-펌프작동남은시간.1
-외부온도관측치 추정
-외부습도관측지 추정
-'''
